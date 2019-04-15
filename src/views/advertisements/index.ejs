@@ -6,20 +6,22 @@
 </head>
 
 <body>
-    <main class="containter">
+    <main class="container">
         <% include ../static/partials/navbar.ejs %>
 
-        <h1>Topics</h1>
+        <h1>Advertisements</h1>
 
         <ul class="list-group">
-            <% topics.forEach((topic) => { %>
+            <!-- #1 -->
+            <% advertisements.forEach((advertisements) => { %>
+            <!-- #2 -->
             <li class="list-group-item">
-                <a href="/topics/<%= topic.id %>"> <%= topic.title %></a>
+                <a href="/topics/<%= advertisements.id %>"> <%= advertisements.title %> </a>
             </li>
             <% }) %>
         </ul>
-    </main>
 
+    </main>
 </body>
 
 </html>

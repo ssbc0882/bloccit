@@ -12,11 +12,7 @@ describe("routes : topics", () => {
 
             Topic.create({
                 title: "JS Frameworks",
-<<<<<<< HEAD
                 description: "There is a lot of them"
-=======
-                description: "There are a lot of them"
->>>>>>> checkpoint-topic-resource2
             })
                 .then((topic) => {
                     this.topic = topic;
@@ -25,25 +21,13 @@ describe("routes : topics", () => {
                 .catch((err) => {
                     console.log(err);
                     done();
-<<<<<<< HEAD
                 })
         })
     })
-=======
-                });
-
-        });
-
-    });
->>>>>>> checkpoint-topic-resource2
 
     describe("GET /topics", () => {
 
         it("should return a status code 200 and all topics", (done) => {
-<<<<<<< HEAD
-=======
-
->>>>>>> checkpoint-topic-resource2
             request.get(base, (err, res, body) => {
                 expect(res.statusCode).toBe(200);
                 expect(err).toBeNull();
@@ -60,8 +44,6 @@ describe("routes : topics", () => {
             request.get(`${base}new`, (err, res, body) => {
                 expect(err).toBeNull();
                 expect(body).toContain("New Topic");
-<<<<<<< HEAD
-=======
                 done();
             });
         });
@@ -86,7 +68,6 @@ describe("routes : topics", () => {
                 expect(err).toBeNull();
                 expect(body).toContain("Edit Topic");
                 expect(body).toContain("JS Frameworks");
->>>>>>> checkpoint-topic-resource2
                 done();
             });
         });
@@ -150,14 +131,14 @@ describe("routes : topics", () => {
 
         it("should delete the topic with the associated ID", (done) => {
 
-            Topic.all()
+            Topic.findAll()
                 .then((topics) => {
 
                     const topicCountBeforeDelete = topics.length;
                     expect(topicCountBeforeDelete).toBe(1);
 
                     request.post(`${base}${this.topic.id}/destroy`, (err, res, body) => {
-                        Topic.all()
+                        Topic.findAll()
                             .then((topics) => {
                                 expect(err).toBeNull();
                                 expect(topics.length).toBe(topicCountBeforeDelete - 1);
