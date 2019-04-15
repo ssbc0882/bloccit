@@ -10,9 +10,11 @@
     <main class="container">
 
         <h1>Edit Topic</h1>
+
         <form action="/topics/<%= topic.id %>/update" method="post">
             <div class="form-group">
                 <label for="title">Topic title</label>
+
                 <input value="<%= topic.title %>" type="text" class="form-control" name="title"
                     aria-describedby="titleHelp" placeholder="Enter Title">
             </div>
