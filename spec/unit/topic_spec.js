@@ -1,6 +1,7 @@
 const sequelize = require("../../src/db/models/index").sequelize;
 const Topic = require("../../src/db/models").Topic;
 const Post = require("../../src/db/models").Post;
+const User = require("../../src/db/models").User;
 
 describe("Topic", () => {
 
@@ -8,31 +9,44 @@ describe("Topic", () => {
 
         this.topic;
         this.post;
+        this.user;
+
         sequelize.sync({ force: true }).then((res) => {
 
-            Topic.create({
-                title: "Expeditions to Alpha Centauri",
-                description: "A compilation of reports from recent visits to the star system."
+            User.create({
+                email: "starman@tesla.com",
+                password: "Trekkie4lyfe"
             })
-                .then((topic) => {
-                    this.topic = topic;
+                .then((user) => {
+                    this.user = user;
 
-                    Post.create({
-                        title: "The better gaming consoles",
-                        body: "Separate the console rankings by decade",
-                        topicId: this.topic.id
-                    })
-                        .then((post) => {
-                            this.post = post;
+                    Topic.create({
+                        title: "Expeditions to Alpha Centauri",
+                        description: "A compilation of reports from recent visits to the star system.",
+
+
+                        posts: [{
+                            title: "My first visit to Proxima Centauri b",
+                            body: "I saw some rocks.",
+                            userId: this.user.id
+                        }]
+                    }, {
+
+
+                            include: {
+                                model: Post,
+                                as: "posts"
+                            }
+                        })
+                        .then((topic) => {
+                            this.topic = topic;
+                            this.post = topic.posts[0];
                             done();
                         })
                 })
-                .catch((err) => {
-                    console.log(err);
-                    done();
-                })
-        })
-    })
+        });
+    });
+
 
     describe("#create()", () => {
 
@@ -59,7 +73,7 @@ describe("Topic", () => {
                 title: "Build your own personal computer",
                 description: "Pay someone else to do it"
             })
-                .then((post) => {
+                .then((topic) => {
 
                     done();
                 })
@@ -78,7 +92,7 @@ describe("Topic", () => {
 
             this.topic.getPosts()
                 .then((posts) => {
-                    expect(posts[0].title).toBe("The better gaming consoles");
+                    expect(posts[0].title).toBe("My first visit to Proxima Centauri b");
                     done();
                 });
         });

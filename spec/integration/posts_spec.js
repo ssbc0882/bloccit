@@ -41,6 +41,10 @@ describe("routes : posts", () => {
                             this.post = topic.posts[0];
                             done();
                         })
+                        .catch((err) => {
+                            console.log(err);
+                            done();
+                        })
                 })
         });
 
@@ -68,11 +72,12 @@ describe("routes : posts", () => {
 
     });
 
-    describe("GET /topics/:topicId/posts/:id", () => {
+    describe("GET /topics/:topicId/posts/:id/edit", () => {
 
-        it("should render a view with the selected post", (done) => {
-            request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
+        it("should render a view with an edit post form", (done) => {
+            request.get(`${base}/${this.topic.id}/posts/${this.post.id}edit`, (err, res, body) => {
                 expect(err).toBeNull();
+                expect(body).toContain("Edit Post");
                 expect(body).toContain("Snowball Fighting");
                 done();
             });
