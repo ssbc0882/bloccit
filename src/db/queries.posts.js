@@ -6,7 +6,7 @@ module.exports = {
     addPost(newPost, callback) {
         return Post.create(newPost)
             .then((post) => {
-                callback(null, post)
+                callback(null, post);
             })
             .catch((err) => {
                 callback(err);
@@ -14,7 +14,7 @@ module.exports = {
     },
 
     getPost(id, callback) {
-        return Post.findByPk(id)
+        return Post.findById(id)
             .then((post) => {
                 callback(null, post);
             })
@@ -36,7 +36,7 @@ module.exports = {
     },
 
     updatePost(id, updatedPost, callback) {
-        return Post.findByPk(id)
+        return Post.findById(id)
             .then((post) => {
                 if (!post) {
                     return callback("Post not found");

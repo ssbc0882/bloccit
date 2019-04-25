@@ -41,10 +41,6 @@ describe("routes : posts", () => {
                             this.post = topic.posts[0];
                             done();
                         })
-                        .catch((err) => {
-                            console.log(err);
-                            done();
-                        })
                 })
         });
 
@@ -63,6 +59,7 @@ describe("routes : posts", () => {
     describe("GET /topics/:topicId/posts/:id", () => {
 
         it("should render a view with the selected post", (done) => {
+            console.log("ROUTE ", `${base}/${this.topic.id}/posts/${this.post.id}`)
             request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
                 expect(err).toBeNull();
                 expect(body).toContain("Snowball Fighting");
@@ -75,7 +72,7 @@ describe("routes : posts", () => {
     describe("GET /topics/:topicId/posts/:id/edit", () => {
 
         it("should render a view with an edit post form", (done) => {
-            request.get(`${base}/${this.topic.id}/posts/${this.post.id}edit`, (err, res, body) => {
+            request.get(`${base}/${this.topic.id}/posts/${this.post.id}/edit`, (err, res, body) => {
                 expect(err).toBeNull();
                 expect(body).toContain("Edit Post");
                 expect(body).toContain("Snowball Fighting");
@@ -95,21 +92,23 @@ describe("routes : posts", () => {
                     body: "Without a doubt my favoriting things to do besides watching paint dry!"
                 }
             };
-            request.post(options, (err, res, body) => {
-
-                Post.findOne({ where: { title: "Watching snow melt" } })
-                    .then((post) => {
-                        expect(post).not.toBeNull();
-                        expect(post.title).toBe("Watching snow melt");
-                        expect(post.body).toBe("Without a doubt my favoriting things to do besides watching paint dry!");
-                        expect(post.topicId).not.toBeNull();
-                        done();
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        done();
-                    });
-            });
+            request.post(options,
+                (err, res, body) => {
+                    console.log("OPTION VARIABLE", options);
+                    Post.findOne({ where: { title: "Watching snow melt" } })
+                        .then((post) => {
+                            console.log("WHAT IS IT!", post)
+                            expect(post).not.toBeNull();
+                            expect(post.title).toBe("Watching snow melt");
+                            expect(post.body).toBe("Without a doubt my favoriting things to do besides watching paint dry!");
+                            expect(post.topicId).not.toBeNull();
+                            done();
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            done();
+                        });
+                });
         });
 
         it("should not create a new post that fails validations", (done) => {
@@ -123,18 +122,20 @@ describe("routes : posts", () => {
                 }
             };
 
-            request.post(options, (err, res, body) => {
+            request.post(options,
+                (err, res, body) => {
 
-                Post.findOne({ where: { title: "a" } })
-                    .then((post) => {
-                        expect(post).toBeNull();
-                        done();
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                        done();
-                    })
-            })
+                    Post.findOne({ where: { title: "a" } })
+                        .then((post) => {
+                            console.log("DUMMY POST", post)
+                            expect(post).toBeNull();
+                            done();
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            done();
+                        })
+                })
         })
     });
 
@@ -146,7 +147,7 @@ describe("routes : posts", () => {
 
             request.post(`${base}/${this.topic.id}/posts/${this.post.id}/destroy`, (err, res, body) => {
 
-                Post.findByPk(1)
+                Post.findById(1)
                     .then((post) => {
                         expect(err).toBeNull();
                         expect(post).toBeNull();

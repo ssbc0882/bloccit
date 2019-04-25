@@ -24,7 +24,7 @@ describe("Post", () => {
                         description: "A compilation of reports from recent visits to the star system.",
                         posts: [{
                             title: "My first visit to Proxima Centauri b",
-                            body: "I saw some rocks.",
+                            body: "I saw some rocks",
                             userId: this.user.id
                         }]
                     }, {
@@ -50,7 +50,7 @@ describe("Post", () => {
                 title: "Pros of Cryosleep during the long journey",
                 body: "1. Not having to answer the 'are we there yet?' question.",
                 topicId: this.topic.id,
-                userId: this.userId
+                userId: this.user.id
             })
                 .then((post) => {
 
@@ -124,17 +124,18 @@ describe("Post", () => {
             User.create({
                 email: "ada@example.com",
                 password: "password"
-            }).then((newUser) => {
-
-                expect(this.post.userId).toBe(this.user.id);
-
-                this.post.setUser(newUser)
-                    .then((post) => {
-
-                        expect(this.post.userId).toBe(newUser.id);
-                        done();
-                    });
             })
+                .then((newUser) => {
+
+                    expect(this.post.userId).toBe(this.user.id);
+
+                    this.post.setUser(newUser)
+                        .then((post) => {
+
+                            expect(this.post.userId).toBe(newUser.id);
+                            done();
+                        });
+                })
         });
     });
 

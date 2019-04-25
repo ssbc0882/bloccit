@@ -17,7 +17,7 @@ module.exports = {
 
     getTopic(id, callback) {
 
-        return Topic.findByPk(id, {
+        return Topic.findById(id, {
 
             include: [{
                 model: Post,
@@ -44,7 +44,7 @@ module.exports = {
     },
 
     deleteTopic(req, callback) {
-        return Topic.findByPk(req.params.id)
+        return Topic.findById(req.params.id)
             .then((topic) => {
 
                 const authorized = new Authorizer(req.user, topic).destroy();
