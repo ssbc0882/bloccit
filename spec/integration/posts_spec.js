@@ -136,7 +136,7 @@ describe("routes : posts", () => {
                             done();
                         })
                 })
-        })
+        });
     });
 
     describe("POST /topics/:topicId/posts/:id/destroy", () => {

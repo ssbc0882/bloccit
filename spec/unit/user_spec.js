@@ -62,9 +62,9 @@ describe("User", () => {
                         email: "user@example.com",
                         password: "nananananananananananananananana BATMAN!"
                     })
-                    then((user) => {
-                        done();
-                    })
+                        .then((user) => {
+                            done();
+                        })
                         .catch((err) => {
                             expect(err.message).toContain("Validation error");
                             done();
