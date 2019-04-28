@@ -39,7 +39,6 @@ describe("routes : posts", () => {
                         .then((topic) => {
                             this.topic = topic;
                             this.post = topic.posts[0];
-                            console.log("THIS POST", this.post)
                             done();
                         })
                 })
@@ -88,8 +87,6 @@ describe("routes : posts", () => {
 
                 request.get(`${base}/${this.topic.id}/posts/${this.post.id}`,
                     (err, res, body) => {
-                        console.log("ROUTE", `${base}/${this.topic.id}/posts/${this.post.id}`)
-                        console.log("ID POST", err);
                         expect(err).toBeNull();
                         expect(body).toContain("Snowball Fighting");
                         done();
