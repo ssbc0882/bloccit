@@ -22,7 +22,7 @@ module.exports = {
                 userId: req.user.id
             };
 
-            PostQueries.addPost(newPost, (err, post) => {
+            postQueries.addPost(newPost, (err, post) => {
                 if (err) {
                     res.redirect(500, "posts/new");
                 } else {
@@ -31,16 +31,8 @@ module.exports = {
             });
         } else {
             req.flash("notice", "You are not authorized to do that.");
-            res.redirect("/posts");
+            res.redirect(`/topics/${req.params.topicId}`);
         }
-
-        postQueries.addPost(newPost, (err, post) => {
-            if (err) {
-                res.redirect(500, "/posts/new");
-            } else {
-                res.redirect(303, `/topics/${newPost.topicId}/posts/${post.id}`);
-            }
-        });
     },
 
     show(req, res, next) {
@@ -48,7 +40,7 @@ module.exports = {
             if (err || post == null) {
                 res.redirect(404, "/");
             } else {
-                res.redirect("posts/show", { post });
+                res.redirect(200, "posts/show", { post });
             }
         });
     },

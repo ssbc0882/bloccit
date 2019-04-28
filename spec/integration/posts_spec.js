@@ -39,6 +39,7 @@ describe("routes : posts", () => {
                         .then((topic) => {
                             this.topic = topic;
                             this.post = topic.posts[0];
+                            console.log("THIS POST", this.post)
                             done();
                         })
                 })
@@ -85,11 +86,14 @@ describe("routes : posts", () => {
 
             it("should render a view with the selected post", (done) => {
 
-                request.get(`${base}/${this.topic.id}/posts/${this.post.id}`, (err, res, body) => {
-                    expect(err).toBeNull();
-                    expect(body).toContain("Snowball Fighting");
-                    done();
-                });
+                request.get(`${base}/${this.topic.id}/posts/${this.post.id}`,
+                    (err, res, body) => {
+                        console.log("ROUTE", `${base}/${this.topic.id}/posts/${this.post.id}`)
+                        console.log("ID POST", err);
+                        expect(err).toBeNull();
+                        expect(body).toContain("Snowball Fighting");
+                        done();
+                    });
             });
         });
 
@@ -114,11 +118,7 @@ describe("routes : posts", () => {
                 };
                 request.post(options,
                     (err, res, body) => {
-                        console.log("OPTION VARIABLE", options);
                         Post.findOne({ where: { title: "Watching snow melt" } }).then((post) => {
-                            console.log("FORM TITLE", options.form.title)
-                            console.log("FIND THE POST", Post.findOne({ where: { title: "Watching snow melt" } }))
-                            console.log("WHAT IS IT!", post)
                             expect(post).not.toBeNull();
                             expect(post.title).toBe("Watching snow melt");
                             expect(post.body).toBe("Without a doubt my favoriting things to do besides watching paint dry!");
@@ -148,7 +148,6 @@ describe("routes : posts", () => {
 
                         Post.findOne({ where: { title: "a" } })
                             .then((post) => {
-                                console.log("DUMMY POST", post)
                                 expect(post).toBeNull();
                                 done();
                             })
@@ -267,9 +266,7 @@ describe("routes : posts", () => {
                 };
                 request.post(options,
                     (err, res, body) => {
-                        console.log("OPTION VARIABLE", options);
                         Post.findOne({ where: { title: "Watching snow melt" } }).then((post) => {
-                            console.log("WHAT IS IT!", post)
                             expect(post).not.toBeNull();
                             expect(post.title).toBe("Watching snow melt");
                             expect(post.body).toBe("Without a doubt my favoriting things to do besides watching paint dry!");
@@ -299,12 +296,10 @@ describe("routes : posts", () => {
 
                         Post.findOne({ where: { title: "a" } })
                             .then((post) => {
-                                console.log("DUMMY POST", post)
                                 expect(post).toBeNull();
                                 done();
                             })
                             .catch((err) => {
-                                console.log(err);
                                 done();
                             })
                     })
@@ -363,7 +358,6 @@ describe("routes : posts", () => {
                             where: { id: this.post.id }
                         })
                             .then((post) => {
-                                console.log("FIND THIS", post)
                                 expect(post.title).toBe("Snowman Building Competition");
                                 done();
                             });

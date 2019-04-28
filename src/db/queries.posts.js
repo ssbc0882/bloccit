@@ -7,7 +7,6 @@ module.exports = {
     addPost(newPost, callback) {
         return Post.create(newPost)
             .then((post) => {
-                console.log("NEW POST", post)
                 callback(null, post);
             })
             .catch((err) => {
