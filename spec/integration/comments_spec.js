@@ -49,8 +49,8 @@ describe("routes : comments", () => {
                                 userId: this.user.id,
                                 postId: this.post.id
                             })
-                                .then((coment) => {
-                                    this.comment = coment;
+                                .then((comment) => {
+                                    this.comment = comment;
                                     done();
                                 })
                                 .catch((err) => {
@@ -138,18 +138,40 @@ describe("routes : comments", () => {
     describe("signed in user performing CRUD actions for Comment", () => {
 
         beforeEach((done) => {
-            request.get({
-                url: "http://localhost:3000/auth/fake",
-                form: {
-                    role: "member",     // mock authenticate as member user
-                    userId: this.user.id
-                }
-            },
-                (err, res, body) => {
-                    done();
-                }
-            );
+            this.altUser;
+            this.altComment;
+
+            User.create({
+                email: "alt@email.com",
+                password: "123456",
+                comments: [{
+                    body: "hi there",
+                    postId: this.post.id
+                }]
+            }, {
+                    include: {
+                        model: Comment,
+                        as: "comments"
+                    }
+                })
+                .then((altUser) => {
+                    this.altUser = altUser;
+                    this.altComment = altUser.comments[0];
+
+                    request.get({
+                        url: "http://localhost:3000/auth/fake",
+                        form: {
+                            role: "member",
+                            userId: this.user.id
+                        }
+                    },
+                        (err, res, body) => {
+                            done();
+                        }
+                    );
+                })
         });
+
 
         describe("POST /topics/:topicId/posts/:postId/comments/create", () => {
 
@@ -181,11 +203,12 @@ describe("routes : comments", () => {
         describe("POST /topics/:topicId/posts/:postId/comments/:id/destroy", () => {
 
             it("should delete the comment with the associated ID", (done) => {
+
                 Comment.findAll()
                     .then((comments) => {
                         const commentCountBeforeDelete = comments.length;
 
-                        expect(commentCountBeforeDelete).toBe(1);
+                        expect(commentCountBeforeDelete).toBe(2);
 
                         request.post(
                             `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
@@ -203,7 +226,73 @@ describe("routes : comments", () => {
 
             });
 
+            it("should not delete another members comment", (done) => {
+
+                Comment.findAll()
+                    .then((comments) => {
+
+                        const commentCountBeforeDelete = comments.length;
+
+                        expect(commentCountBeforeDelete).toBe(2);
+
+                        request.post(
+                            `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.altComment.id}/destroy`,
+                            (err, res, body) => {
+                                Comment.findAll()
+                                    .then((comments) => {
+                                        expect(err).toBeNull();
+                                        expect(comments.length).toBe(commentCountBeforeDelete);
+                                        done();
+                                    })
+                            });
+                    })
+            });
         });
-        //end signed in user test
+
+        //end signed in user test     
     });
+
+    //start admin user test
+
+    describe("admin performing CRUD actions for Comments", () => {
+        beforeEach((done) => {
+            request.get({
+                url: "http://localhost:3000/auth/fake",
+                form: {
+                    role: "admin"
+                }
+            },
+                (err, res, body) => {
+                    done();
+                }
+            );
+        });
+
+        describe("POST /topics/:topicId/posts/:postId/comments/:commentId/destroy", () => {
+
+            it("should be able to delete other user's comments", (done) => {
+
+                Comment.findAll()
+                    .then((comments) => {
+                        expect(comments[0].id).toBe(1);
+                        request.post(
+                            `${base}${this.topic.id}/posts/${this.post.id}/comments/${this.comment.id}/destroy`,
+                            (err, res, body) => {
+                                Comment.findById(1)
+                                    .then((comment) => {
+                                        expect(err).toBeNull();
+                                        expect(comment).toBeNull();
+                                        done();
+                                    });
+                            }
+                        );
+                    });
+            });
+        });
+
+    });
+    //end admin user test 
+
 });
+
+
