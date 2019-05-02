@@ -53,7 +53,7 @@ module.exports = {
             if (!authorized) {
                 res.redirect(500, `/topics/${req.params.topicId}/posts/${req.params.id}`)
             } else {
-                res.redirect(303, `/topics/${req.params.topicId}`)
+                res.redirect(303, `/topics/${req.params.topicId}`);
             }
         });
     },
