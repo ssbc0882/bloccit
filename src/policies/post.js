@@ -7,7 +7,7 @@ module.exports = class PostPolicy extends ApplicationPolicy {
     }
 
     edit() {
-        return this._isAdmin() || this._isOwner();
+        return this.user && this.record && (this._isAdmin() || this._isOwner());
     }
 
     update() {

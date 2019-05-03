@@ -5,7 +5,14 @@ module.exports = {
 
     new(req, res, next) {
 
-        res.render("posts/new", { topicId: req.params.topicId });
+        const authorized = new Authorizer(req.user).new();
+
+        if (authorized) {
+            res.render("posts/new", { topicId: req.params.topicId });
+        } else {
+            req.flash("notice", "You are not authorized to do that.");
+            res.redirect("/posts");
+        }
 
     },
 
@@ -48,9 +55,8 @@ module.exports = {
     destroy(req, res, next) {
         postQueries.deletePost(req, (err, post) => {
 
-            const authorized = new Authorizer(req.post).destroy();
-
-            if (!authorized) {
+            if (err) {
+                console.log(err);
                 res.redirect(500, `/topics/${req.params.topicId}/posts/${req.params.id}`)
             } else {
                 res.redirect(303, `/topics/${req.params.topicId}`);
