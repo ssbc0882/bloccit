@@ -62,6 +62,7 @@ module.exports = (sequelize, DataTypes) => {
       .reduce((prev, next) => { return prev + next });
   };
 
+<<<<<<< HEAD
   Post.prototype.getFavoriteFor = function (userId) {
     return this.favorites.find((favorite) => { return favorite.userId == userId });
   };
@@ -75,6 +76,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
 
+=======
+  Post.prototype.hasUpvoteFor = function (userId) {
+    if (this.votes.userId === userId && this.votes.value === 1) return true;
+  }
+
+  Post.prototype.hasDownvoteFor = function (userId) {
+    if (this.votes.userId === userId && this.votes.value === -1) return true;
+  }
+>>>>>>> assignment-vote
   return Post;
 };
 
